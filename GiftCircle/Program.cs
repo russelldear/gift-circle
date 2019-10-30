@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -14,9 +15,18 @@ namespace GiftCircle
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder
-                        .UseUrls("http://0.0.0.0:5005")
-                        .UseStartup<Startup>();
+                    if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+                    {
+                        webBuilder
+                            .UseUrls("http://0.0.0.0:5005")
+                            .UseStartup<Startup>();
+                    }
+                    else
+                    {
+                        webBuilder
+                            .UseUrls("http://0.0.0.0:5005")
+                            .UseStartup<Startup>();
+                    }
                 });
     }
 }
