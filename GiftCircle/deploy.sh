@@ -9,7 +9,7 @@ apt-get update
 apt-get install jq -y
 
 TASK=$(aws ecs describe-task-definition --task-definition gift-circle --output json | jq '.taskDefinition.containerDefinitions')
-aws ecs register-task-definition --family gift-circle --container-definitions "$TASK" --task-role-arn arn:aws:iam::540629508292:role/ecsTaskExecutionRole
+aws ecs register-task-definition --family gift-circle --container-definitions "$TASK" --task-role-arn arn:aws:iam::540629508292:role/ecsTaskExecutionRole --execution-role-arn arn:aws:iam::540629508292:role/ecsTaskExecutionRole
 
 REVISION=$(aws ecs describe-task-definition --task-definition gift-circle --output json  | jq -r '.taskDefinition.revision')
 aws ecs update-service --cluster default-ec2 --service gift-circle --task-definition gift-circle:$REVISION
