@@ -1,3 +1,6 @@
+using System;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +21,24 @@ namespace GiftCircle
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            var cognitoClientId = Environment.GetEnvironmentVariable("CognitoClientId");
+            var cognitoClientSecret = Environment.GetEnvironmentVariable("CognitoClientSecret");
+
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                })
+                .AddCookie()
+                .AddOpenIdConnect(options =>
+                {
+                    options.ResponseType = Configuration["Authentication:Cognito:ResponseType"];
+                    options.MetadataAddress = Configuration["Authentication:Cognito:MetadataAddress"];
+                    options.ClientId = cognitoClientId;
+                    options.ClientSecret = cognitoClientSecret;
+                });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
