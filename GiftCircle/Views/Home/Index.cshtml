@@ -1,8 +1,8 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+﻿<div class="text-center">
+    <h1 class="display-4">GiftCircle</h1>
+    <img style="width: 100px; height: 100px; margin: 20px;" src="images/gift-circle.png" />
+    <p>Give what they want. Get what <i>you</i> want. </p>
+    <form method="get">
+        @Html.ActionLink("Sign in", "Index", "Circles", null, new { @class = "btn btn-success btn-large" })
+    </form>
 </div>

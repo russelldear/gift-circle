@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using GiftCircle.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace GiftCircle.Controllers
 {
@@ -16,12 +15,6 @@ namespace GiftCircle.Controllers
         }
 
         public IActionResult Index()
-        {
-            return View();
-        }
-
-        [Authorize]
-        public IActionResult Privacy()
         {
             return View();
         }
