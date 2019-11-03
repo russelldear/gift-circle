@@ -16,6 +16,11 @@ namespace GiftCircle.Controllers
 
         public IActionResult Index()
         {
+            if (User != null)
+            {
+                return RedirectToAction("Index", "Circles");
+            }
+
             return View();
         }
 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GiftCircle
+namespace GiftCircle.Models
 {
     public class Circle
     {

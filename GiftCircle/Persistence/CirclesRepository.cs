@@ -4,9 +4,10 @@ using System.Threading.Tasks;
 using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DocumentModel;
+using GiftCircle.Models;
 using Newtonsoft.Json;
 
-namespace GiftCircle
+namespace GiftCircle.Persistence
 {
     public class CirclesRepository
     {
@@ -20,13 +21,11 @@ namespace GiftCircle
 
             if (string.IsNullOrWhiteSpace(dynamoDbSettings.ServiceUrl))
             {
-                clientConfig = new AmazonDynamoDBConfig
-                    {RegionEndpoint = RegionEndpoint.GetBySystemName(dynamoDbSettings.RegionEndpoint)};
+                clientConfig = new AmazonDynamoDBConfig {RegionEndpoint = RegionEndpoint.GetBySystemName(dynamoDbSettings.RegionEndpoint)};
             }
             else
             {
-                clientConfig = new AmazonDynamoDBConfig {RegionEndpoint = RegionEndpoint.USEast1};
-                clientConfig.ServiceURL = dynamoDbSettings.ServiceUrl;
+                clientConfig = new AmazonDynamoDBConfig {ServiceURL = dynamoDbSettings.ServiceUrl};
             }
 
             var dynamoDbClient = new AmazonDynamoDBClient(clientConfig);
@@ -34,17 +33,13 @@ namespace GiftCircle
             _circlesTable = Table.LoadTable(dynamoDbClient, CirclesTableName);
         }
 
-        public async Task<Guid> CreateCircle(string userId, string name)
+        public async Task CreateCircle(Circle circle)
         {
-            var circle = new Circle {Id = Guid.NewGuid(), UserId = userId, Name = name};
-
             var circleAsJson = JsonConvert.SerializeObject(circle);
             
             var item = Document.FromJson(circleAsJson);
 
             await _circlesTable.PutItemAsync(item);
-
-            return circle.Id;
         }
 
         public async Task<Circle> GetCircle(Guid circleId)
@@ -57,17 +52,26 @@ namespace GiftCircle
 
             var document = await _circlesTable.GetItemAsync(circleId.ToString(), config);
 
-            return Map(document);
+            return document.ToCircle();
         }
 
-        private Circle Map(Document document)
+        public async Task<List<Circle>> GetCircles(string userId)
         {
-            return new Circle
+            var scanFilter = new ScanFilter();
+
+            scanFilter.AddCondition("UserId", ScanOperator.Equal, userId);
+
+            var search = _circlesTable.Scan(scanFilter);
+
+            var documentList = new List<Document>();
+
+            do
             {
-                Id = Guid.Parse(document["Id"]),
-                UserId = document["UserId"],
-                Name = document["Name"]
-            };
+                documentList.AddRange(await search.GetNextSetAsync());
+
+            } while (!search.IsDone);
+
+            return documentList.ToCircles();
         }
     }
 }

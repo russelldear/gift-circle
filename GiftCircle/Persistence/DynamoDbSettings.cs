@@ -1,4 +1,4 @@
-﻿namespace GiftCircle
+﻿namespace GiftCircle.Persistence
 {
     public class DynamoDbSettings
     {

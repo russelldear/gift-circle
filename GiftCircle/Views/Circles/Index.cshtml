@@ -1,3 +1,22 @@
-﻿<div class="text-center">
-    <p>One day, this won't be vaporware.</p>
+﻿@model CirclesViewModel
+
+<div class="text-center">
+    @if (Model.Circles != null && Model.Circles.Any())
+    {
+        <h3>Your Circles</h3>
+
+        <ul class="list-group">
+
+            @foreach (var circle in Model.Circles)
+            {
+                <li class="list-group-item">@circle.Name</li>
+            }
+
+        </ul>
+    }
+    <div class="buttonForm">
+        <form method="post">
+            @Html.ActionLink("Create Circle", "Create", "Circles", null, new {@class = "btn btn-success btn-large"})
+        </form>
+    </div>
 </div>

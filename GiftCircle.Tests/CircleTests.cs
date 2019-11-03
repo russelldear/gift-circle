@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using GiftCircle.Models;
+using GiftCircle.Persistence;
 using Xunit;
 
 namespace GiftCircle.Tests
@@ -7,7 +9,7 @@ namespace GiftCircle.Tests
     public class CircleTests
     {
         private CirclesRepository _circlesRepository;
-        private Guid _createdCircleId;
+        private Guid _newCircleId;
         private Circle _retrievedCircle;
 
         [Fact]
@@ -27,12 +29,16 @@ namespace GiftCircle.Tests
 
         private async Task When_I_create_a_circle()
         {
-            _createdCircleId = await _circlesRepository.CreateCircle("123", "456");
+            _newCircleId = Guid.NewGuid();
+
+            var circle = new Circle{Id = _newCircleId, UserId = "123", Name = "456"};
+
+            await _circlesRepository.CreateCircle(circle);
         }
 
         private async Task Then_the_circle_was_created()
         {
-            _retrievedCircle = await _circlesRepository.GetCircle(_createdCircleId);
+            _retrievedCircle = await _circlesRepository.GetCircle(_newCircleId);
 
             Assert.NotNull(_retrievedCircle);
         }
