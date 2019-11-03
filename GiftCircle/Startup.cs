@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 
 namespace GiftCircle
@@ -21,6 +22,10 @@ namespace GiftCircle
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var dynamoDbSettings = Configuration.GetSection("DynamoDb").Get<DynamoDbSettings>();
+            services.TryAddSingleton(dynamoDbSettings);
+            services.TryAddSingleton(new CirclesRepository(dynamoDbSettings));
+
             services.AddControllersWithViews();
 
             var cognitoClientId = Environment.GetEnvironmentVariable("CognitoClientId");
