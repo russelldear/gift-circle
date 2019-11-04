@@ -24,7 +24,7 @@ namespace GiftCircle.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            var userId = User.Claims.Where(c => c.Type == "cognito:username").Select(c => c.Value).SingleOrDefault();
+            var userId = User.GetUserId();
 
             var circles = await _circlesRepository.GetCircles(userId);
 
@@ -36,7 +36,7 @@ namespace GiftCircle.Controllers
         [Authorize]
         public async Task<IActionResult> Create()
         {
-            var userId = User.Claims.Where(c => c.Type == "cognito:username").Select(c => c.Value).SingleOrDefault();
+            var userId = User.GetUserId();
 
             var newCircle = new Circle
             {

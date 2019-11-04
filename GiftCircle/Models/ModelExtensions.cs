@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
 using Amazon.DynamoDBv2.DocumentModel;
 
 namespace GiftCircle.Models
@@ -26,6 +28,18 @@ namespace GiftCircle.Models
             }
             
             return result;
+        }
+
+        public static string GetUserId(this ClaimsPrincipal user)
+        {
+            try
+            {
+                return user.Claims.Where(c => c.Type == "cognito:username").Select(c => c.Value).SingleOrDefault();
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
         }
     }
 }

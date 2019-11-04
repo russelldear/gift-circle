@@ -16,7 +16,7 @@ namespace GiftCircle.Controllers
 
         public IActionResult Index()
         {
-            if (User != null)
+            if (!string.IsNullOrWhiteSpace(User.GetUserId()))
             {
                 return RedirectToAction("Index", "Circles");
             }
