@@ -15,3 +15,4 @@ REVISION=$(aws ecs describe-task-definition --task-definition gift-circle --outp
 aws ecs update-service --cluster default-ec2 --service gift-circle --task-definition gift-circle:$REVISION
 
 #run chmod +x deploy.sh first if you have permissions issues
+
