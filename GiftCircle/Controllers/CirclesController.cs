@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using GiftCircle.Models;
 using GiftCircle.Persistence;
@@ -10,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace GiftCircle.Controllers
 {
+    [Authorize]
     public class CirclesController : Controller
     {
         private readonly CirclesRepository _circlesRepository;
@@ -20,8 +19,8 @@ namespace GiftCircle.Controllers
             _circlesRepository = circlesRepository;
             _logger = logger;
         }
-
-        [Authorize]
+        
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var userId = User.GetUserId();
@@ -33,8 +32,8 @@ namespace GiftCircle.Controllers
             return View(viewModel);
         }
 
-        [Authorize]
-        public async Task<IActionResult> Create()
+        [HttpPost]
+        public async Task<IActionResult> Create(string name)
         {
             var userId = User.GetUserId();
 
@@ -42,7 +41,7 @@ namespace GiftCircle.Controllers
             {
                 Id = Guid.NewGuid(),
                 UserId = userId,
-                Name = "test"
+                Name = name
             };
 
             await _circlesRepository.CreateCircle(newCircle);

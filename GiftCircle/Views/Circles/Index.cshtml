@@ -15,8 +15,12 @@
         </ul>
     }
     <div class="buttonForm">
-        <form method="post">
-            @Html.ActionLink("Create Circle", "Create", "Circles", null, new {@class = "btn btn-success btn-large"})
-        </form>
+        
+        @using (Html.BeginForm("Create", "Circles", FormMethod.Post)) 
+        { 
+            @Html.TextBox("Name")
+            <input class="btn btn-success btn-large" type="submit" value="Create New Circle" />
+        } 
+
     </div>
 </div>
